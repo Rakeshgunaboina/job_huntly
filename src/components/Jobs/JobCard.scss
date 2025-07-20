@@ -1,0 +1,125 @@
+.job-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .job-header {
+    display: flex;
+    margin-bottom: 1rem;
+    align-items: center;
+
+    .company-logo {
+      width: 50px;
+      height: 50px;
+      border-radius: 8px;
+      background-color: #f5f7fa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 1rem;
+      overflow: hidden;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+
+      .logo-placeholder {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #4a6bdf;
+      }
+    }
+
+    .job-info {
+      flex: 1;
+
+      .job-title {
+        margin: 0;
+        font-size: 1.2rem;
+        color: #2d3748;
+      }
+
+      .company-name {
+        margin: 0.25rem 0;
+        color: #4a5568;
+        font-size: 0.9rem;
+      }
+
+      .job-location {
+        margin: 0;
+        color: #718096;
+        font-size: 0.8rem;
+        display: flex;
+        align-items: center;
+      }
+    }
+  }
+
+  .job-details {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+
+    .detail {
+      display: flex;
+      flex-direction: column;
+
+      .label {
+        font-size: 0.8rem;
+        color: #718096;
+      }
+
+      .value {
+        font-weight: 600;
+        color: #2d3748;
+      }
+    }
+  }
+
+  .job-actions {
+    display: flex;
+    gap: 1rem;
+
+    .view-btn, .save-btn {
+      flex: 1;
+      padding: 0.75rem;
+      border-radius: 6px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .view-btn {
+      background-color: #4a6bdf;
+      color: white;
+      border: none;
+
+      &:hover {
+        background-color: #3a5bcf;
+      }
+    }
+
+    .save-btn {
+      background-color: white;
+      color: #4a6bdf;
+      border: 1px solid #4a6bdf;
+
+      &:hover {
+        background-color: #f5f7ff;
+      }
+    }
+  }
+}
