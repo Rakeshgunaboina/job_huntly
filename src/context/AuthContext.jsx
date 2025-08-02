@@ -3,30 +3,48 @@ import { createContext, useContext, useState } from 'react';
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState(() => {
+    const storedUser = localStorage.getItem('jobhuntly_user');
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
 
   const login = async (email, password) => {
-    // Mock implementation
-    const user = { 
-      email, 
-      name: 'Test User', 
-      userType: 'student',
-      id: 'user-' + Math.random().toString(36).substr(2, 9)
-    };
-    setCurrentUser(user);
-    localStorage.setItem('jobhuntly_user', JSON.stringify(user));
-    return user;
+    const response = await fetch('http://localhost:5000/job_huntly/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Login failed');
+    }
+
+    setCurrentUser(data.user);
+    localStorage.setItem('jobhuntly_user', JSON.stringify(data.user));
+    return data.user;
   };
 
   const register = async (userData) => {
-    // Mock implementation
-    const user = { 
-      ...userData, 
-      id: 'user-' + Math.random().toString(36).substr(2, 9)
+    const response = await fetch('http://localhost:5000/job_huntly/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(userData)
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Registration failed');
+    }
+
+    const registeredUser = {
+      ...userData,
+      name: `${userData.firstName} ${userData.lastName}`
     };
-    setCurrentUser(user);
-    localStorage.setItem('jobhuntly_user', JSON.stringify(user));
-    return user;
+
+    setCurrentUser(registeredUser);
+    localStorage.setItem('jobhuntly_user', JSON.stringify(registeredUser));
+    return registeredUser;
   };
 
   const logout = () => {
@@ -35,11 +53,11 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ 
-      currentUser, 
-      login, 
-      register, 
-      logout 
+    <AuthContext.Provider value={{
+      currentUser,
+      login,
+      register,
+      logout
     }}>
       {children}
     </AuthContext.Provider>

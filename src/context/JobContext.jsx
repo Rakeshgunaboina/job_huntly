@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 
 const JobContext = createContext();
 
@@ -7,24 +7,16 @@ export function JobProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Mock data - replace with actual API call
-    const mockJobs = [
-      {
-        id: '1',
-        title: 'Retail Assistant',
-        company: 'SuperStore',
-        location: 'London',
-        type: 'Part-time',
-        hoursPerWeek: 20,
-        salary: 10.50,
-        description: 'Customer service role in busy retail environment',
-        companyLogo: null
-      },
-      // Add more mock jobs as needed
-    ];
-    
-    setJobs(mockJobs);
-    setLoading(false);
+    fetch('http://localhost:5000/job_huntly/jobs')
+      .then(res => res.json())
+      .then(data => {
+        setJobs(data);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Failed to fetch jobs:', err);
+        setLoading(false);
+      });
   }, []);
 
   return (

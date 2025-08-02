@@ -2,11 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import ReCAPTCHA from 'react-google-recaptcha';
 import axios from 'axios';
 import './Contact.scss';
 
-// Form validation schema
 const contactSchema = yup.object().shape({
   name: yup.string().required('Name is required').min(2, 'Name too short'),
   email: yup.string().required('Email is required').email('Invalid email'),
@@ -18,7 +16,6 @@ const contactSchema = yup.object().shape({
 const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
-  const [recaptchaToken, setRecaptchaToken] = useState(null);
   const [contactMethods] = useState([
     { value: 'email', label: 'Email' },
     { value: 'phone', label: 'Phone Call' },
@@ -30,17 +27,9 @@ const Contact = () => {
   });
 
   const onSubmit = async (data) => {
-    if (!recaptchaToken) {
-      setSubmitStatus({ success: false, message: 'Please complete the CAPTCHA' });
-      return;
-    }
-
     setIsSubmitting(true);
     try {
-      const response = await axios.post('/api/contact', {
-        ...data,
-        recaptchaToken
-      });
+      const response = await axios.post('http://localhost:5000/job_huntly/contact', data);
 
       if (response.data.success) {
         setSubmitStatus({ success: true, message: 'Message sent successfully!' });
@@ -58,12 +47,9 @@ const Contact = () => {
     }
   };
 
-  // Auto-dismiss success message after 5 seconds
   useEffect(() => {
     if (submitStatus?.success) {
-      const timer = setTimeout(() => {
-        setSubmitStatus(null);
-      }, 5000);
+      const timer = setTimeout(() => setSubmitStatus(null), 5000);
       return () => clearTimeout(timer);
     }
   }, [submitStatus]);
@@ -74,7 +60,7 @@ const Contact = () => {
         <div className="contact-info">
           <h2>Get in Touch</h2>
           <p>Have questions or feedback? We'd love to hear from you.</p>
-          
+
           <div className="contact-methods">
             <div className="contact-method">
               <i className="fas fa-envelope"></i>
@@ -82,14 +68,12 @@ const Contact = () => {
               <p>support@jobhuntly.com</p>
               <p>Response time: 24 hours</p>
             </div>
-            
             <div className="contact-method">
               <i className="fas fa-phone"></i>
               <h3>Call Us</h3>
               <p>+1 (555) 123-4567</p>
               <p>Mon-Fri, 9am-5pm GMT</p>
             </div>
-            
             <div className="contact-method">
               <i className="fas fa-map-marker-alt"></i>
               <h3>Visit Us</h3>
@@ -101,7 +85,7 @@ const Contact = () => {
 
         <div className="contact-form-container">
           <h2>Send Us a Message</h2>
-          
+
           {submitStatus && (
             <div className={`submit-status ${submitStatus.success ? 'success' : 'error'}`}>
               {submitStatus.message}
@@ -112,35 +96,20 @@ const Contact = () => {
             <div className="form-row">
               <div className={`form-group ${errors.name ? 'error' : ''}`}>
                 <label htmlFor="name">Full Name</label>
-                <input
-                  id="name"
-                  type="text"
-                  {...register('name')}
-                  placeholder="Enter your full name"
-                />
+                <input id="name" type="text" {...register('name')} placeholder="Enter your full name" />
                 {errors.name && <span className="error-message">{errors.name.message}</span>}
               </div>
 
               <div className={`form-group ${errors.email ? 'error' : ''}`}>
                 <label htmlFor="email">Email Address</label>
-                <input
-                  id="email"
-                  type="email"
-                  {...register('email')}
-                  placeholder="Enter your email"
-                />
+                <input id="email" type="email" {...register('email')} placeholder="Enter your email" />
                 {errors.email && <span className="error-message">{errors.email.message}</span>}
               </div>
             </div>
 
             <div className={`form-group ${errors.subject ? 'error' : ''}`}>
               <label htmlFor="subject">Subject</label>
-              <input
-                id="subject"
-                type="text"
-                {...register('subject')}
-                placeholder="What's this about?"
-              />
+              <input id="subject" type="text" {...register('subject')} placeholder="What's this about?" />
               {errors.subject && <span className="error-message">{errors.subject.message}</span>}
             </div>
 
@@ -149,11 +118,7 @@ const Contact = () => {
               <div className="radio-group">
                 {contactMethods.map(method => (
                   <label key={method.value} className="radio-option">
-                    <input
-                      type="radio"
-                      value={method.value}
-                      {...register('contactMethod')}
-                    />
+                    <input type="radio" value={method.value} {...register('contactMethod')} />
                     <span className="radio-custom"></span>
                     {method.label}
                   </label>
@@ -164,22 +129,11 @@ const Contact = () => {
 
             <div className={`form-group ${errors.message ? 'error' : ''}`}>
               <label htmlFor="message">Your Message</label>
-              <textarea
-                id="message"
-                {...register('message')}
-                placeholder="How can we help you?"
-                rows="5"
-              />
+              <textarea id="message" {...register('message')} placeholder="How can we help you?" rows="5" />
               {errors.message && <span className="error-message">{errors.message.message}</span>}
             </div>
 
-           
-
-            <button 
-              type="submit" 
-              className="submit-btn"
-              disabled={isSubmitting}
-            >
+            <button type="submit" className="submit-btn" disabled={isSubmitting}>
               {isSubmitting ? (
                 <>
                   <i className="fas fa-spinner fa-spin"></i> Sending...

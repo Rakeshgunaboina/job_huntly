@@ -14,7 +14,13 @@ import Register from './components/Auth/Register';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import NotFound from './pages/NotFound';
+import RecruiterDashboard from './components/Dashboard/RecruiterDashboard';
+import StudentDashboard from './components/Dashboard/StudentDashboard';
 import './styles/main.scss';
+import ApplyForm from './pages/ApplyForm';
+import PostJob from './pages/PostJob';
+import ManageJobs from './pages/ManageJobs';
+import EditJob from './pages/EditJob';
 
 function App() {
   return (
@@ -34,6 +40,15 @@ function App() {
                 <Route path="/register" element={<Register />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/contact" element={<Contact />} />
+                <Route path="/recruiter-dashboard" element={<RecruiterDashboard />} />
+                <Route path="/student-dashboard" element={<StudentDashboard />} />
+                <Route path="/jobs/:id/apply" element={<ApplyForm />} />
+                <Route path="/post-job" element={<PostJob />} />
+                <Route path="/manage-jobs" element={<ManageJobs />} />
+                <Route path="/edit-job/:id" element={<EditJob />} />
+                
+                
+                
 
                 {/* 404 Not Found */}
                 <Route path="*" element={<NotFound />} />

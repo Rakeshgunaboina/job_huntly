@@ -14,8 +14,14 @@ const Login = () => {
     try {
       setIsLoading(true);
       setError('');
-      await login(email, password);
-      navigate('/dashboard');
+      const user = await login(email, password);
+
+      // Redirect based on role
+      if (user.user_type === 'recruiter') {
+        navigate('/recruiter-dashboard');
+      } else {
+        navigate('/student-dashboard');
+      }
     } catch (err) {
       setError(err.message || 'Failed to log in');
     } finally {
@@ -46,9 +52,7 @@ const Login = () => {
               Sign up
             </Link>
           </p>
-          <Link to="/forgot-password" className="auth-link">
-            Forgot password?
-          </Link>
+          {/* Forgot password link removed */}
         </div>
       </div>
 

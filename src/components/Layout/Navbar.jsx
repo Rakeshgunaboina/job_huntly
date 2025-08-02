@@ -29,11 +29,18 @@ const Navbar = () => {
 
   const closeMenu = () => setIsMenuOpen(false);
 
+  const getDashboardPath = () => {
+    // if (!currentUser || !currentUser.userType) return '/dashboard';
+    return currentUser.user_type === 'recruiter'
+      ? '/recruiter-dashboard'
+      : '/student-dashboard';
+  };
+
   return (
     <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
       <div className="navbar-container">
         <div className="navbar-brand">
-          <Link to="/" className="logo-link">
+          <Link to="/" className="logo-link" onClick={closeMenu}>
             <span className="logo-icon">💼</span>
             <span className="logo-text">JobHuntly</span>
           </Link>
@@ -41,29 +48,29 @@ const Navbar = () => {
 
         <div className={`navbar-links ${isMenuOpen ? 'active' : ''}`}>
           <div className="nav-links">
-            <Link 
-              to="/jobs" 
+            <Link
+              to="/jobs"
               className={`nav-link ${location.pathname === '/jobs' ? 'active' : ''}`}
               onClick={closeMenu}
             >
               Browse Jobs
             </Link>
-            <Link 
-              to="/resources" 
+            {/* <Link
+              to="/resources"
               className={`nav-link ${location.pathname === '/resources' ? 'active' : ''}`}
               onClick={closeMenu}
             >
               Resources
-            </Link>
-            <Link 
-              to="/about" 
+            </Link> */}
+            <Link
+              to="/about"
               className={`nav-link ${location.pathname === '/about' ? 'active' : ''}`}
               onClick={closeMenu}
             >
               About
             </Link>
-            <Link 
-              to="/contact" 
+            <Link
+              to="/contact"
               className={`nav-link ${location.pathname === '/contact' ? 'active' : ''}`}
               onClick={closeMenu}
             >
@@ -74,14 +81,14 @@ const Navbar = () => {
           <div className="auth-links">
             {currentUser ? (
               <div className="user-menu">
-                <Link 
-                  to="/dashboard" 
+                <Link
+                  to={getDashboardPath()}
                   className="dashboard-link"
                   onClick={closeMenu}
                 >
                   Dashboard
                 </Link>
-                <button 
+                <button
                   className="logout-btn"
                   onClick={handleLogout}
                 >
@@ -90,15 +97,15 @@ const Navbar = () => {
               </div>
             ) : (
               <>
-                <Link 
-                  to="/login" 
+                <Link
+                  to="/login"
                   className="login-link"
                   onClick={closeMenu}
                 >
                   Log In
                 </Link>
-                <Link 
-                  to="/register" 
+                <Link
+                  to="/register"
                   className="register-link"
                   onClick={closeMenu}
                 >
@@ -109,7 +116,7 @@ const Navbar = () => {
           </div>
         </div>
 
-        <button 
+        <button
           className={`hamburger ${isMenuOpen ? 'active' : ''}`}
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           aria-label="Toggle menu"
